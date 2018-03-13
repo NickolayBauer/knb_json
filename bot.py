@@ -9,10 +9,20 @@ bot = telebot.TeleBot(config.token)
 media = json.load(open("test.json", mode='r'))
 
 
+def last_mamont(i):
+    with open('test.json', 'r') as jfr:
+        jf_file = json.load(jfr)
+
+    with open('test.json', 'w') as outfile:
+        jf_file['id'][i]['score']+=1
+
+        json.dump(jf_file,outfile,indent=4)
+
+
 def equal(msg):
     for i in range(len(media['id'])):
         if media['id'][i]['global_id'] == msg:
-                media['id'][i]['score'] += 1
+                last_mamont(i)
 
 
 
@@ -24,6 +34,9 @@ def new_mamont(id,score):
             user_info = {'id': id,'score':score}
             jf_target.append(user_info)
             json.dump(jf_file, jf, indent=4)
+
+
+
 
 @bot.message_handler(commands=["start", "home"])
 def knb(message):
