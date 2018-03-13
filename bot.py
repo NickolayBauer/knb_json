@@ -98,11 +98,12 @@ def don(msg):
 
 @bot.message_handler(func=lambda msg: msg.text == "рекорды")
 def rec(msg):
+    media = json.load(open("test.json", mode='r'))
     per = ''
     for k in media.get("id"):
         #print((str(k.get('global_id')) + '--' + str(k.get("score"))))
         per +=(str(k.get('global_id')) + ' -- ' + str(k.get("score"))+'\n')
-        bot.send_message(msg.chat.id, '___id___счёт___\n'+per)
+    bot.send_message(msg.chat.id, '___id___счёт___\n'+per)
 
 
 
