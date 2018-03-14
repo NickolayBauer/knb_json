@@ -9,39 +9,57 @@ bot = telebot.TeleBot(config.token)
 media = json.load(open("test.json", mode='r'))
 
 
+def check_mamont():
+
+    mas_id = []
+    media = json.load(open("test.json", mode='r'))
+    for some_id in range(len(media['id'])):
+        mas_id.append(media['id'][some_id]['global_id'])
+    print(mas_id)
+    return mas_id
+
+
+def check_mamont_too(id):
+
+    if id in check_mamont():
+        return True
+    else:
+        return False
+
 def last_mamont(i):
     with open('test.json', 'r') as jfr:
         jf_file = json.load(jfr)
 
     with open('test.json', 'w') as outfile:
-        jf_file['id'][i]['score']+=1
+        jf_file['id'][i]['score'] += 1
 
-        json.dump(jf_file,outfile,indent=4)
+        json.dump(jf_file, outfile, indent=4)
 
 
 def equal(msg):
     for i in range(len(media['id'])):
         if media['id'][i]['global_id'] == msg:
-                last_mamont(i)
+            last_mamont(i)
 
 
-
-def new_mamont(id,score):
-        with open('test.json', 'r') as jfr:
-            jf_file = json.load(jfr)
-        with open('test.json', 'w') as jf:
-            jf_target = jf_file['id']
-            user_info = {'id': id,'score':score}
-            jf_target.append(user_info)
-            json.dump(jf_file, jf, indent=4)
-
+def new_mamont(id, name, score):
+    with open('test.json', 'r') as jfr:
+        jf_file = json.load(jfr)
+    with open('test.json', 'w') as jf:
+        jf_target = jf_file['id']
+        user_info = {'global_id': id, 'name': name, 'score': score}
+        jf_target.append(user_info)
+        print(user_info)
+        json.dump(jf_file, jf,indent=4)
 
 
 
 @bot.message_handler(commands=["start", "home"])
 def knb(message):
-    #str(message.chat.last_name+' '+message.chat.first_name ) - проблемы с кодировкой
-    new_mamont(message.chat.id,0)
+
+    if check_mamont_too(message.chat.id) == False:
+        new_mamont(message.chat.id, str(message.chat.first_name) + ' ' + str(message.chat.last_name), 0)
+
     keyboard = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
     kamen = types.KeyboardButton(text="камень")
     noj = types.KeyboardButton(text="ножницы")
@@ -55,6 +73,7 @@ def knb(message):
 
 @bot.message_handler(func=lambda msg: msg.text in config.spisok)
 def kamens(msg):
+    media = json.load(open("test.json", mode='r'))
     if config.tree == 0:
         bot.send_message(msg.chat.id, "количество попыток кончилось -  заплати \nQiwi - +79017698060")
         return
@@ -76,8 +95,6 @@ def kamens(msg):
         if (d % 2) == 0:
             bot.send_message(msg.chat.id, "победа")
             equal(msg.chat.id)
-            print(media[0])
-
             config.tree = 3
         else:
             bot.send_message(msg.chat.id, "поражение")
@@ -101,20 +118,20 @@ def rec(msg):
     media = json.load(open("test.json", mode='r'))
     per = ''
     for k in media.get("id"):
-        #print((str(k.get('global_id')) + '--' + str(k.get("score"))))
-        per +=(str(k.get('global_id')) + ' -- ' + str(k.get("score"))+'\n')
-    bot.send_message(msg.chat.id, '___id___счёт___\n'+per)
+        # print((str(k.get('global_id')) + '--' + str(k.get("score"))))
+        per += (str(k.get('name')) + ' -- ' + str(k.get("score")) + '\n')
+    bot.send_message(msg.chat.id, '___id___счёт___\n' + per)
 
 
 
 
-        # рандомно выбираем из словоря результат и записываем
+    # рандомно выбираем из словоря результат и записываем
 
-        # графика для пользователя
+    # графика для пользователя
 
-        # сравнение номера введенного пользователем резукльтата с записанным выше
+    # сравнение номера введенного пользователем резукльтата с записанным выше
 
-        # вывод сообщения
+    # вывод сообщения
 
 
 if __name__ == '__main__':
