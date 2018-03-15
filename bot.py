@@ -8,14 +8,14 @@ from telebot import types
 
 bot = telebot.TeleBot(config.token)
 
-media = json.load(open("knb/test.json", mode='r'))
+media = json.load(open("test.json", mode='r'))
 
 
 def last_mamont(i):
-    with open('knb/test.json', 'r') as jfr:
+    with open('test.json', 'r') as jfr:
         jf_file = json.load(jfr)
 
-    with open('knb/test.json', 'w') as outfile:
+    with open('test.json', 'w') as outfile:
         jf_file['id'][i]['score'] += 1
 
         json.dump(jf_file, outfile, indent=4)
@@ -28,9 +28,9 @@ def equal(msg):
 
 
 def new_mamont(id, name, score):
-    with open('knb/test.json', 'r') as jfr:
+    with open('test.json', 'r') as jfr:
         jf_file = json.load(jfr)
-    with open('knb/test.json', 'w') as jf:
+    with open('test.json', 'w') as jf:
         jf_target = jf_file['id']
         user_info = {'global_id': id, 'name': name, 'score': score}
         jf_target.append(user_info)
@@ -102,7 +102,7 @@ def don(msg):
 
 @bot.message_handler(func=lambda msg: msg.text == "рекорды")
 def rec(msg):
-    media = json.load(open("knb/test.json", mode='r'))
+    media = json.load(open("test.json", mode='r'))
     per = ''
     for k in media.get("id"):
         # print((str(k.get('global_id')) + '--' + str(k.get("score"))))
