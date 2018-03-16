@@ -1,3 +1,4 @@
+
 import config
 import telebot
 import random
@@ -39,10 +40,10 @@ def equal(msg):
     for i in range(0,len(media['id'])):
         print(media['id'][i]['global_id'])
         print(str(msg))
-        last_mamont(i)
+
         if (media['id'][i]['global_id']) == str(msg):
             print("")
-            #last_mamont(i)
+            last_mamont(i)
 
 
 def new_mamont(id, name, score):
