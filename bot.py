@@ -1,5 +1,3 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
 import config
 import telebot
 import random
@@ -11,20 +9,40 @@ bot = telebot.TeleBot(config.token)
 media = json.load(open("test.json", mode='r'))
 
 
+def check_mamont():
+    mas_id = []
+    media = json.load(open("test.json", mode='r'))
+    for some_id in range(len(media['id'])):
+        mas_id.append(media['id'][some_id]['global_id'])
+    print(mas_id)
+    return mas_id
+
+
+def check_mamont_too(id):
+    if id in check_mamont():
+        return True
+    else:
+        return False
+
+
 def last_mamont(i):
-    with open('test.json', 'r') as jfr:
-        jf_file = json.load(jfr)
+    media = json.load(open("test.json", mode='r'))
 
     with open('test.json', 'w') as outfile:
-        jf_file['id'][i]['score'] += 1
+        media['id'][i]['score']=media['id'][i]['score']+1
 
-        json.dump(jf_file, outfile, indent=4)
+        json.dump(media, outfile, indent=4)
 
 
 def equal(msg):
-    for i in range(len(media['id'])):
-        if media['id'][i]['global_id'] == msg:
-            last_mamont(i)
+    media = json.load(open("test.json", mode='r'))
+    for i in range(0,len(media['id'])):
+        print(media['id'][i]['global_id'])
+        print(str(msg))
+        last_mamont(i)
+        if (media['id'][i]['global_id']) == str(msg):
+            print("")
+            #last_mamont(i)
 
 
 def new_mamont(id, name, score):
@@ -35,18 +53,13 @@ def new_mamont(id, name, score):
         user_info = {'global_id': id, 'name': name, 'score': score}
         jf_target.append(user_info)
         print(user_info)
-        json.dump(jf_file, jf,indent=4)
+        json.dump(jf_file, jf, indent=4)
 
-def check_mamont(id):
-    for some_id in range(len(media['id'])):
-        if int(id) == int(media['id'][some_id]['global_id']):
-            return True
 
 @bot.message_handler(commands=["start", "home"])
 def knb(message):
-    # str(message.chat.last_name+' '+message.chat.first_name ) - проблемы с кодировкой
-    if check_mamont(message.chat.id) != False:
-        new_mamont(message.chat.id, str(message.chat.first_name), 1)
+    if check_mamont_too(str(message.chat.id)) == False:
+        new_mamont(str(message.chat.id), str(message.chat.first_name) + ' ' + str(message.chat.last_name), 0)
 
     keyboard = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
     kamen = types.KeyboardButton(text="камень")
@@ -61,6 +74,7 @@ def knb(message):
 
 @bot.message_handler(func=lambda msg: msg.text in config.spisok)
 def kamens(msg):
+    media = json.load(open("test.json", mode='r'))
     if config.tree == 0:
         bot.send_message(msg.chat.id, "количество попыток кончилось -  заплати \nQiwi - +79017698060")
         return
@@ -88,10 +102,10 @@ def kamens(msg):
             config.tree -= 1
             bot.send_message(msg.chat.id, "количество оставшихся попыток: " + str(config.tree))
 
-        else:
-            bot.send_message(msg.chat.id, "ничья")
-            config.tree -= 1
-            bot.send_message(msg.chat.id, "количество оставшихся попыток: " + str(config.tree))
+    else:
+        bot.send_message(msg.chat.id, "ничья")
+        config.tree -= 1
+        bot.send_message(msg.chat.id, "количество оставшихся попыток: " + str(config.tree))
 
 
 @bot.message_handler(func=lambda msg: msg.text == "добавить попыток")
@@ -123,5 +137,3 @@ def rec(msg):
 
 if __name__ == '__main__':
     bot.polling(none_stop=True)
-
-
