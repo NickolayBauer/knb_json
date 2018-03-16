@@ -37,13 +37,11 @@ def last_mamont(i):
 
 def equal(msg):
     media = json.load(open("test.json", mode='r'))
-    for i in range(0,len(media['id'])):
-        print(media['id'][i]['global_id'])
-        print(str(msg))
-
-        if (media['id'][i]['global_id']) == str(msg):
-            print("")
-            last_mamont(i)
+    k=2-2
+    for i in (media['id']):
+        if (media['id'][k]['global_id']) == str(msg):
+            last_mamont(k)
+        k+=1
 
 
 def new_mamont(id, name, score):
